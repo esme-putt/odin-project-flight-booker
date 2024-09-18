@@ -1,0 +1,23 @@
+<h1>Search for flights</h1>
+
+<%= form_with url: @flights_path, method: :get do |form| %>
+    <%= form.label :departure, "Departing from" %>
+    <%= form.select(:departure_id, @airport_options) %>
+    <%= form.label :arrival, "Arriving at" %>
+    <%= form.select(:arrival_id, @airport_options) %>
+    <%= form.label :passengers, "Passengers" %>
+    <%= form.select(:passengers, @passenger_options) %>
+    <%= form.label :date_pieces, "Date" %>
+    <%= date_select :date, :date_pieces, start_year: Date.today.year, end_year: Date.today.year + 1 %>
+    <%= form.submit "Submit" %>
+<% end %>
+
+<h2>Flights</h2>
+<%= form_with url: @new_booking_path, method: :get do |form| %>
+    <% @flights.each do |flight| %>
+        <%= form.label :flight, flight.start.strftime("%m/%d/%Y") %>
+        <%= form.radio_button :flight, flight.id %>
+    <% end %>
+    <%= form.hidden_field :passengers, value: @passengers %>
+    <%= form.submit "Book now" %>
+<% end %>
