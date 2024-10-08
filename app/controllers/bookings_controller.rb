@@ -18,7 +18,10 @@ class BookingsController < ApplicationController
         @booking = Booking.new(booking_params)
 
         if @booking.save 
-            redirect_to @booking
+            @booking.passengers.each do |passenger|
+                PassengerMailer.with(booking: @booking, passenger: passenger).confirmation_email.deliver_now! 
+            end
+            redirect_to @booking      
         else
             # Log errors to console
             Rails.logger.info @booking.errors.full_messages
